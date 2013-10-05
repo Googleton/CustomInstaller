@@ -1,21 +1,10 @@
 {
-  "install": {
-    "profileName": "FML",
-    "target":"FML5.2.29",
-    "path":"cpw.mods:fml:5.2.29",
-    "version":"FML 5.2.29",
-    "filePath":"fml-universal-1.5.2-5.2.29.1-16launch.jar",
-    "welcome":"Welcome to the simple FML installer.",
-    "minecraft":"1.5.2",
-    "logo":"/big_logo.png",
-    "mirrorList":"http://files.minecraftforge.net/mirror-branded.list"
-  },
   "versionInfo": {
       "id": "FML5.2.29",
       "time": "2013-03-20T12:00:00-04:00",
       "releaseTime": "2013-03-20T12:00:00-04:00",
       "type": "release",
-      "minecraftArguments": "${auth_player_name} ${auth_session} --gameDir ${game_directory} --assetsDir ${game_assets} --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+      "minecraftArguments": "${auth_player_name} ${auth_session} --gameDir ${game_directory}\\modpacks\\serverName --assetsDir ${game_assets} --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
         "libraries": [
         {
           "name": "cpw.mods:fml:5.2.29"

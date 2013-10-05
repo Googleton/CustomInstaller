@@ -66,23 +66,49 @@ public class SimpleInstaller
         }
     }
 
+    public static EnumOs getPlatform()
+    {
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+        if(osName.contains("win"))
+        {
+            return EnumOs.WINDOWS;
+        }
+        if(osName.contains("mac"))
+        {
+            return EnumOs.MACOS;
+        }
+        if(osName.contains("solaris") || osName.contains("sunos") || osName.contains("linux") || osName.contains("unix"))
+        {
+            return EnumOs.UNIX;
+        }
+        return EnumOs.UNKNOWN;
+    }
+
+    public enum EnumOs
+    {
+        WINDOWS, MACOS, UNIX, UNKNOWN;
+    }
+
     private static void launchGui()
     {
         String userHomeDir = System.getProperty("user.home", ".");
-        String osType = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         File targetDir = null;
         String mcDir = ".minecraft";
-        if(osType.contains("win") && System.getenv("APPDATA") != null)
+        if(getPlatform().equals(EnumOs.WINDOWS) && System.getenv("APPDATA") != null)
         {
             targetDir = new File(System.getenv("APPDATA"), mcDir);
         }
-        else if(osType.contains("mac"))
+        else if(getPlatform().equals(EnumOs.MACOS))
         {
             targetDir = new File(new File(new File(userHomeDir, "Library"), "Application Support"), "minecraft");
         }
-        else
+        else if(getPlatform().equals(EnumOs.UNIX))
         {
             targetDir = new File(userHomeDir, mcDir);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "OS unrecognized, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         try

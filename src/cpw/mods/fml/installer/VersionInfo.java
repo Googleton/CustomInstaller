@@ -21,16 +21,27 @@ import com.google.common.io.OutputSupplier;
 public class VersionInfo
 {
     public static final VersionInfo INSTANCE = new VersionInfo();
-    public final JsonRootNode versionData;
+    public final JsonRootNode installerData;
+    public final JsonRootNode profileData;
 
     public VersionInfo()
     {
-        InputStream installProfile = getClass().getResourceAsStream("/install_profile.json");
+        InputStream installerProfile = getClass().getResourceAsStream("/installer_profile.json");
+        InputStream launcherProfile = null;
+        if(SimpleInstaller.getPlatform().equals(SimpleInstaller.EnumOs.WINDOWS))
+        {
+            launcherProfile = getClass().getResourceAsStream("/launcher_profile_WIN.json");
+        }
+        else
+        {
+            launcherProfile = getClass().getResourceAsStream("/launcher_profile_UNIX.json");
+        }
         JdomParser parser = new JdomParser();
 
         try
         {
-            versionData = parser.parse(new InputStreamReader(installProfile, Charsets.UTF_8));
+            installerData = parser.parse(new InputStreamReader(installerProfile, Charsets.UTF_8));
+            profileData = parser.parse(new InputStreamReader(launcherProfile, Charsets.UTF_8));
         }
         catch(Exception e)
         {
@@ -40,17 +51,17 @@ public class VersionInfo
 
     public static String getProfileName()
     {
-        return INSTANCE.versionData.getStringValue("install", "profileName");
+        return INSTANCE.installerData.getStringValue("install", "profileName");
     }
 
     public static String getVersionTarget()
     {
-        return INSTANCE.versionData.getStringValue("install", "target");
+        return INSTANCE.installerData.getStringValue("install", "target");
     }
 
     public static File getLibraryPath(File root)
     {
-        String path = INSTANCE.versionData.getStringValue("install", "path");
+        String path = INSTANCE.installerData.getStringValue("install", "path");
         String[] split = Iterables.toArray(Splitter.on(':').omitEmptyStrings().split(path), String.class);
         File dest = root;
         Iterable<String> subSplit = Splitter.on('.').omitEmptyStrings().split(split[0]);
@@ -65,24 +76,24 @@ public class VersionInfo
 
     public static String getVersion()
     {
-        return INSTANCE.versionData.getStringValue("install", "version");
+        return INSTANCE.installerData.getStringValue("install", "version");
     }
 
     public static String getWelcomeMessage()
     {
-        return INSTANCE.versionData.getStringValue("install", "welcome");
+        return INSTANCE.installerData.getStringValue("install", "welcome");
     }
 
     public static String getLogoFileName()
     {
-        return INSTANCE.versionData.getStringValue("install", "logo");
+        return INSTANCE.installerData.getStringValue("install", "logo");
     }
 
     public static boolean getStripMetaInf()
     {
         try
         {
-            return INSTANCE.versionData.getBooleanValue("install", "stripMeta");
+            return INSTANCE.installerData.getBooleanValue("install", "stripMeta");
         }
         catch(Exception e)
         {
@@ -92,7 +103,7 @@ public class VersionInfo
 
     public static JsonNode getVersionInfo()
     {
-        return INSTANCE.versionData.getNode("versionInfo");
+        return INSTANCE.profileData.getNode("versionInfo");
     }
 
     public static File getMinecraftFile(File path)
@@ -102,7 +113,7 @@ public class VersionInfo
 
     public static String getContainedFile()
     {
-        return INSTANCE.versionData.getStringValue("install", "filePath");
+        return INSTANCE.installerData.getStringValue("install", "filePath");
     }
 
     public static void extractFile(File path) throws IOException
@@ -119,16 +130,16 @@ public class VersionInfo
 
     public static String getMinecraftVersion()
     {
-        return INSTANCE.versionData.getStringValue("install", "minecraft");
+        return INSTANCE.installerData.getStringValue("install", "minecraft");
     }
 
     public static String getMirrorListURL()
     {
-        return INSTANCE.versionData.getStringValue("install", "mirrorList");
+        return INSTANCE.installerData.getStringValue("install", "mirrorList");
     }
 
     public static boolean hasMirrors()
     {
-        return INSTANCE.versionData.isStringValue("install", "mirrorList");
+        return INSTANCE.installerData.isStringValue("install", "mirrorList");
     }
 }
