@@ -142,4 +142,34 @@ public class VersionInfo
     {
         return INSTANCE.installerData.isStringValue("install", "mirrorList");
     }
+    
+    public static String getJVMArguments()
+    {
+        return INSTANCE.installerData.getStringValue("install", "JVMArguments");
+    }
+
+    public static boolean hasJVMArguments()
+    {
+        return INSTANCE.installerData.isStringValue("install", "JVMArguments");
+    }
+    
+    public static String getModsURL()
+    {
+        return INSTANCE.installerData.getStringValue("install", "modsURL");
+    }
+    
+    public static String getConfigsURL()
+    {
+        return INSTANCE.installerData.getStringValue("install", "configsURL");
+    }
+    
+    public static String getAdditionPackURL()
+    {
+        return INSTANCE.installerData.getStringValue("install", "additionPackURL");
+    }
+    
+    public static boolean hasAdditionPack()
+    {
+        return INSTANCE.installerData.isStringValue("install", "additionPackURL");
+    }
 }

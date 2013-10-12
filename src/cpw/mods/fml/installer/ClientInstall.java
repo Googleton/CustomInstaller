@@ -158,8 +158,15 @@ public class ClientInstall implements ActionType
             throw Throwables.propagate(e);
         }
 
-        JsonField[] fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(VersionInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(VersionInfo.getVersionTarget())),};
-
+        JsonField[] fields;
+        if(VersionInfo.hasJVMArguments())
+        {
+            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(VersionInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(VersionInfo.getVersionTarget())), JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(VersionInfo.getJVMArguments()))};
+        }
+        else
+        {
+            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(VersionInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(VersionInfo.getVersionTarget()))};
+        }
         HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
         HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
         profileCopy.put(JsonNodeFactories.string(VersionInfo.getProfileName()), JsonNodeFactories.object(fields));
@@ -178,6 +185,35 @@ public class ClientInstall implements ActionType
         catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // make modpacks folder
+        File modPacksFolder = new File(target, "modpacks");
+        File thisPackFolder = new File(modPacksFolder, VersionInfo.getProfileName());
+        if(!modPacksFolder.exists())
+        {
+            modPacksFolder.mkdir();
+        }
+        if(!thisPackFolder.exists())
+        {
+            thisPackFolder.mkdir();
+        }
+
+        // download mod
+        List<String> downloadLink = Lists.newArrayList();
+        downloadLink.add(VersionInfo.getModsURL());
+        downloadLink.add(VersionInfo.getConfigsURL());
+        if(VersionInfo.hasAdditionPack())
+        {
+            downloadLink.add(VersionInfo.getAdditionPackURL());
+        }
+        try
+        {
+            DownloadUtils.downloadAndExtractMod(downloadLink, thisPackFolder);
+        }
+        catch(Exception e)
+        {
             return false;
         }
 
