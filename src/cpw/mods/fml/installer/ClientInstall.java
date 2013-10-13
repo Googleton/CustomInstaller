@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -213,6 +214,23 @@ public class ClientInstall implements ActionType
             DownloadUtils.downloadAndExtractMod(downloadLink, thisPackFolder);
         }
         catch(Exception e)
+        {
+            return false;
+        }
+        
+        if(VersionInfo.getRemoteVersion().equals("unknow"))
+        {
+        	JOptionPane.showMessageDialog(null, "Couldn't get remote version, check your network", "Error", JOptionPane.ERROR_MESSAGE);
+        	return false;
+        }
+        
+        try
+        {
+        	BufferedWriter bw = new BufferedWriter(new FileWriter(new File(thisPackFolder, "version.txt")));
+        	bw.write(VersionInfo.getRemoteVersion());
+        	bw.close();
+        }
+        catch(IOException e)
         {
             return false;
         }

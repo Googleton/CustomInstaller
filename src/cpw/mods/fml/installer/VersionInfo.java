@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import argo.jdom.JdomParser;
 import argo.jdom.JsonNode;
@@ -76,7 +77,21 @@ public class VersionInfo
 
     public static String getVersion()
     {
-        return INSTANCE.installerData.getStringValue("install", "version");
+        return INSTANCE.installerData.getStringValue("install", "installerVersion");
+    }
+    
+    public static String getRemoteVersion()
+    {
+        String url = INSTANCE.installerData.getStringValue("install", "remoteVersionURL");
+        List<String> version = DownloadUtils.downloadList(url);
+        if(version.isEmpty())
+        {
+        	return "unknow";
+        }
+        else
+        {
+            return version.get(0);
+        }
     }
 
     public static String getWelcomeMessage()

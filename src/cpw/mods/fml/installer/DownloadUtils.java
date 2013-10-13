@@ -3,6 +3,7 @@ package cpw.mods.fml.installer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -557,7 +558,28 @@ public class DownloadUtils
 
 			String path = fileLocation.toString();
 
-			System.out.println(path);
+			if(fileName.endsWith(".xz"))
+			{
+				FileInputStream inFile = new FileInputStream(path);
+				FileOutputStream outfile = new FileOutputStream(path.replace(".xz", ""));
+
+				XZInputStream xzIn = new XZInputStream(inFile);
+
+				byte[] buf = new byte[8192];
+				int size;
+				while((size = xzIn.read(buf)) != -1)
+				{
+					outfile.write(buf, 0, size);
+				}
+
+				outfile.close();
+				xzIn.close();
+
+				fileLocation.delete();
+				path = path.replace(".xz", "");
+				fileLocation = new File(path);
+			}
+
 			JarFile jarFile = new JarFile(path, true);
 			Enumeration<JarEntry> entities = jarFile.entries();
 
