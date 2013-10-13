@@ -416,6 +416,52 @@ public class DownloadUtils
 		}
 	}
 
+	public static void downloadAndExtractMod(List<String> host, File dest, String updaterURL)
+	{
+		IMonitor monitor = new IMonitor()
+		{
+			private ProgressMonitor monitor;
+			{
+				monitor = new ProgressMonitor(null, "Download and extract mods and configs             ", "   ", 0, 1);
+				monitor.setMillisToPopup(0);
+				monitor.setMillisToDecideToPopup(0);
+				monitor.setProgress(0);
+			}
+
+			@Override
+			public void setMaximum(int max)
+			{
+				monitor.setMaximum(max);
+			}
+
+			@Override
+			public void setNote(String note)
+			{
+				System.out.println(note);
+				monitor.setNote(note);
+			}
+
+			@Override
+			public void setProgress(int progress)
+			{
+				monitor.setProgress(progress);
+			}
+
+			@Override
+			public void close()
+			{
+				monitor.close();
+			}
+		};
+
+		for(String downloadLink : host)
+		{
+			downloadMods(monitor, downloadLink, dest);
+		}
+		downloadUpdater(monitor, updaterURL, dest);
+		monitor.close();
+	}
+	
 	public static void downloadAndExtractMod(List<String> host, File dest)
 	{
 		IMonitor monitor = new IMonitor()
@@ -632,6 +678,76 @@ public class DownloadUtils
 		catch(IOException e)
 		{
 			JOptionPane.showMessageDialog(null, "Error while trying to extract " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+	
+	public static void downloadUpdater(IMonitor monitor, String host, File dest)
+	{
+		String fileName = "unknow";
+		byte[] buffer = new byte[65536];
+		try
+		{
+			URL url = new URL(host);
+			URLConnection urlconnection = url.openConnection();
+
+			if((urlconnection instanceof HttpURLConnection))
+			{
+				urlconnection.setRequestProperty("Cache-Control", "no-cache");
+				urlconnection.connect();
+			}
+
+			int fileLength = urlconnection.getContentLength();
+
+			if(fileLength == -1)
+			{
+				JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			monitor.setMaximum(fileLength);
+
+			fileName = url.getFile().substring(url.getFile().lastIndexOf('/') + 1);
+			InputStream inputstream = urlconnection.getInputStream();
+			FileOutputStream fos = new FileOutputStream(dest.toString() + File.separator + fileName);
+
+			long downloadStartTime = System.currentTimeMillis();
+			int downloadedAmount = 0;
+			int bufferSize;
+			int currentSizeDownload = 0;
+			while((bufferSize = inputstream.read(buffer, 0, buffer.length)) != -1)
+			{
+				fos.write(buffer, 0, bufferSize);
+				currentSizeDownload += bufferSize;
+				monitor.setProgress(currentSizeDownload);
+
+				downloadedAmount += bufferSize;
+				long timeLapse = System.currentTimeMillis() - downloadStartTime;
+
+				if(timeLapse >= 1000L)
+				{
+					float downloadSpeed = downloadedAmount / (float)timeLapse;
+					downloadSpeed = (int)(downloadSpeed * 100.0F) / 100.0F;
+					downloadedAmount = 0;
+					downloadStartTime += 1000L;
+
+					if(downloadSpeed > 1000F)
+					{
+						DecimalFormat df = new DecimalFormat();
+						df.setMaximumFractionDigits(2);
+						monitor.setNote("Download " + fileName + " at " + String.valueOf(df.format(downloadSpeed / 1000)) + " mo/s");
+					}
+					else
+					{
+						monitor.setNote("Download " + fileName + " at " + String.valueOf(downloadSpeed) + " ko/s");
+					}
+				}
+			}
+			inputstream.close();
+			fos.close();
+		}
+		catch(IOException e)
+		{
+			JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

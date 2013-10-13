@@ -10,6 +10,7 @@
     "minecraft":"1.6.4",
     "logo":"/big_logo.png",
     "mirrorList":"http://files.minecraftforgefrance.fr/mirror-brand.list",
+    "updaterURL":"http://files.minecraftforgefrance.fr/installercustom/Updater.jar",
     "modsURL":"http://files.minecraftforgefrance.fr/installercustom/mods.zip.xz",
     "configsURL":"http://files.minecraftforgefrance.fr/installercustom/config.zip.xz",
     "JVMArguments":"-Xmx1536M -XX:PermSize=64M -XX:MaxPermSize=128M"

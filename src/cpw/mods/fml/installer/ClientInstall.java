@@ -211,7 +211,7 @@ public class ClientInstall implements ActionType
         }
         try
         {
-            DownloadUtils.downloadAndExtractMod(downloadLink, thisPackFolder);
+            DownloadUtils.downloadAndExtractMod(downloadLink, thisPackFolder, VersionInfo.getUpdaterURL());
         }
         catch(Exception e)
         {

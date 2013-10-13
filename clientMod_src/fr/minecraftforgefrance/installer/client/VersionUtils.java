@@ -32,6 +32,7 @@ public class VersionUtils
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			return Collections.emptyList();
 		}
 	}
@@ -57,10 +58,10 @@ public class VersionUtils
 		String localVersion;
 		String remoteVersion;
 		
-		List<String> list = readRemoteFile(CustomClientMod.versionFileURL);
+		List<String> list = readRemoteFile(ClientUpdaterMod.versionFileURL);
 		if(list.isEmpty())
 		{
-			CustomClientMod.logger.severe("Couldn't get remote version, check your network");
+			ClientUpdaterMod.logger.severe("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}
