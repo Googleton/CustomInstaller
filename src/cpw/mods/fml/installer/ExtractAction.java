@@ -16,7 +16,7 @@ public class ExtractAction implements ActionType
     @Override
     public boolean run(File target)
     {
-        File file = new File(target, VersionInfo.getContainedFile());
+        File file = new File(target, RemoteInfo.getContainedFile());
         try
         {
             VersionInfo.extractFile(file);
@@ -30,11 +30,11 @@ public class ExtractAction implements ActionType
         try
         {
             List<String> downloadLink = Lists.newArrayList();
-            downloadLink.add(VersionInfo.getModsURL());
-            downloadLink.add(VersionInfo.getConfigsURL());
-            if(VersionInfo.hasAdditionPack())
+            downloadLink.add(RemoteInfo.getModsURL());
+            downloadLink.add(RemoteInfo.getConfigsURL());
+            if(RemoteInfo.hasAdditionPack())
             {
-                downloadLink.add(VersionInfo.getAdditionPackURL());
+                downloadLink.add(RemoteInfo.getAdditionPackURL());
             }
             DownloadUtils.downloadAndExtractMod(downloadLink, target);
         }

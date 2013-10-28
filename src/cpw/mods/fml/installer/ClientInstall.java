@@ -54,7 +54,7 @@ public class ClientInstall implements ActionType
         }
 
         File versionRootDir = new File(target, "versions");
-        File versionTarget = new File(versionRootDir, VersionInfo.getVersionTarget());
+        File versionTarget = new File(versionRootDir, RemoteInfo.getVersionTarget());
         if(!versionTarget.mkdirs() && !versionTarget.isDirectory())
         {
             if(!versionTarget.delete())
@@ -68,8 +68,8 @@ public class ClientInstall implements ActionType
             }
         }
 
-        File versionJsonFile = new File(versionTarget, VersionInfo.getVersionTarget() + ".json");
-        File clientJarFile = new File(versionTarget, VersionInfo.getVersionTarget() + ".jar");
+        File versionJsonFile = new File(versionTarget, RemoteInfo.getVersionTarget() + ".json");
+        File clientJarFile = new File(versionTarget, RemoteInfo.getVersionTarget() + ".jar");
         File minecraftJarFile = VersionInfo.getMinecraftFile(versionRootDir);
         try
         {
@@ -84,13 +84,13 @@ public class ClientInstall implements ActionType
         }
         catch(IOException e1)
         {
-            JOptionPane.showMessageDialog(null, "You need to run the version " + VersionInfo.getMinecraftVersion() + " manually at least once", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You need to run the version " + RemoteInfo.getMinecraftVersion() + " manually at least once", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         File librariesDir = new File(target, "libraries");
         File targetLibraryFile = VersionInfo.getLibraryPath(librariesDir);
         IMonitor monitor = DownloadUtils.buildMonitor();
-        List<JsonNode> libraries = VersionInfo.getVersionInfo().getArrayNode("libraries");
+        List<JsonNode> libraries = RemoteInfo.getVersionInfo().getArrayNode("libraries");
         monitor.setMaximum(libraries.size() + 2);
         int progress = 2;
         grabbed = Lists.newArrayList();
@@ -118,7 +118,7 @@ public class ClientInstall implements ActionType
             }
         }
 
-        JsonRootNode versionJson = JsonNodeFactories.object(VersionInfo.getVersionInfo().getFields());
+        JsonRootNode versionJson = JsonNodeFactories.object(RemoteInfo.getVersionInfo().getFields());
 
         try
         {
@@ -160,17 +160,17 @@ public class ClientInstall implements ActionType
         }
 
         JsonField[] fields;
-        if(VersionInfo.hasJVMArguments())
+        if(RemoteInfo.hasJVMArguments())
         {
-            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(VersionInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(VersionInfo.getVersionTarget())), JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(VersionInfo.getJVMArguments()))};
+            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget())), JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(RemoteInfo.getJVMArguments()))};
         }
         else
         {
-            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(VersionInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(VersionInfo.getVersionTarget()))};
+            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget()))};
         }
         HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
         HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
-        profileCopy.put(JsonNodeFactories.string(VersionInfo.getProfileName()), JsonNodeFactories.object(fields));
+        profileCopy.put(JsonNodeFactories.string(RemoteInfo.getProfileName()), JsonNodeFactories.object(fields));
         JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
 
         rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);
@@ -191,7 +191,7 @@ public class ClientInstall implements ActionType
 
         // make modpacks folder
         File modPacksFolder = new File(target, "modpacks");
-        File thisPackFolder = new File(modPacksFolder, VersionInfo.getProfileName());
+        File thisPackFolder = new File(modPacksFolder, RemoteInfo.getProfileName());
         if(!modPacksFolder.exists())
         {
             modPacksFolder.mkdir();
@@ -203,11 +203,11 @@ public class ClientInstall implements ActionType
 
         // download mod
         List<String> downloadLink = Lists.newArrayList();
-        downloadLink.add(VersionInfo.getModsURL());
-        downloadLink.add(VersionInfo.getConfigsURL());
-        if(VersionInfo.hasAdditionPack())
+        downloadLink.add(RemoteInfo.getModsURL());
+        downloadLink.add(RemoteInfo.getConfigsURL());
+        if(RemoteInfo.hasAdditionPack())
         {
-            downloadLink.add(VersionInfo.getAdditionPackURL());
+            downloadLink.add(RemoteInfo.getAdditionPackURL());
         }
         try
         {
@@ -313,7 +313,7 @@ public class ClientInstall implements ActionType
     @Override
     public String getSuccessMessage()
     {
-        return String.format("Successfully installed client profile %s for version %s into launcher and grabbed %d required libraries", VersionInfo.getProfileName(), VersionInfo.getVersion(), grabbed.size());
+        return String.format("Successfully installed client profile %s for version %s into launcher and grabbed %d required libraries", RemoteInfo.getProfileName(), RemoteInfo.getNameAndVersion(), grabbed.size());
     }
 
     @Override

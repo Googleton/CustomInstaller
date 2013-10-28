@@ -100,11 +100,11 @@ public class InstallerPanel extends JPanel
         logoLabel.setAlignmentY(CENTER_ALIGNMENT);
         logoLabel.setSize(image.getWidth(), image.getHeight());
         logoSplash.add(logoLabel);
-        JLabel tag = new JLabel(VersionInfo.getWelcomeMessage());
+        JLabel tag = new JLabel(RemoteInfo.getWelcomeMessage());
         tag.setAlignmentX(CENTER_ALIGNMENT);
         tag.setAlignmentY(CENTER_ALIGNMENT);
         logoSplash.add(tag);
-        tag = new JLabel(VersionInfo.getVersion());
+        tag = new JLabel(RemoteInfo.getNameAndVersion());
         tag.setAlignmentX(CENTER_ALIGNMENT);
         tag.setAlignmentY(CENTER_ALIGNMENT);
         logoSplash.add(tag);

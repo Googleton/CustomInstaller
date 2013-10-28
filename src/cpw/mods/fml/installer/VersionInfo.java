@@ -5,10 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import argo.jdom.JdomParser;
-import argo.jdom.JsonNode;
 import argo.jdom.JsonRootNode;
 
 import com.google.common.base.Charsets;
@@ -21,175 +23,122 @@ import com.google.common.io.OutputSupplier;
 
 public class VersionInfo
 {
-    public static final VersionInfo INSTANCE = new VersionInfo();
-    public final JsonRootNode installerData;
-    public final JsonRootNode profileData;
+	public static final VersionInfo INSTANCE = new VersionInfo();
+	public final JsonRootNode installerData;
 
-    public VersionInfo()
-    {
-        InputStream installerProfile = getClass().getResourceAsStream("/installer_profile.json");
-        InputStream launcherProfile = null;
-        if(SimpleInstaller.getPlatform().equals(SimpleInstaller.EnumOs.WINDOWS))
-        {
-            launcherProfile = getClass().getResourceAsStream("/launcher_profile_WIN.json");
-        }
-        else
-        {
-            launcherProfile = getClass().getResourceAsStream("/launcher_profile_UNIX.json");
-        }
-        JdomParser parser = new JdomParser();
+	public VersionInfo()
+	{
+		InputStream installerProfile = getClass().getResourceAsStream("/installer_profile.json");
+		
+		JdomParser parser = new JdomParser();
+		try
+		{
+			installerData = parser.parse(new InputStreamReader(installerProfile, Charsets.UTF_8));
+		}
+		catch(Exception e)
+		{
+			throw Throwables.propagate(e);
+		}
+	}
 
-        try
-        {
-            installerData = parser.parse(new InputStreamReader(installerProfile, Charsets.UTF_8));
-            profileData = parser.parse(new InputStreamReader(launcherProfile, Charsets.UTF_8));
-        }
-        catch(Exception e)
-        {
-            throw Throwables.propagate(e);
-        }
-    }
+	public static File getLibraryPath(File root)
+	{
+		String path = RemoteInfo.INSTANCE.remoteInstallerData.getStringValue("remoteInstall", "path");
+		String[] split = Iterables.toArray(Splitter.on(':').omitEmptyStrings().split(path), String.class);
+		File dest = root;
+		Iterable<String> subSplit = Splitter.on('.').omitEmptyStrings().split(split[0]);
+		for(String part : subSplit)
+		{
+			dest = new File(dest, part);
+		}
+		dest = new File(new File(dest, split[1]), split[2]);
+		String fileName = split[1] + "-" + split[2] + ".jar";
+		return new File(dest, fileName);
+	}
 
-    public static String getProfileName()
-    {
-        return INSTANCE.installerData.getStringValue("install", "profileName");
-    }
+	public static String getRemoteVersion()
+	{
+		String url = INSTANCE.installerData.getStringValue("install", "remoteVersionURL");
+		List<String> version = DownloadUtils.downloadList(url);
+		if(version.isEmpty())
+		{
+			return "unknow";
+		}
+		else
+		{
+			return version.get(0);
+		}
+	}
 
-    public static String getVersionTarget()
-    {
-        return INSTANCE.installerData.getStringValue("install", "target");
-    }
+	public static String getLogoFileName()
+	{
+		return INSTANCE.installerData.getStringValue("install", "logo");
+	}
 
-    public static File getLibraryPath(File root)
-    {
-        String path = INSTANCE.installerData.getStringValue("install", "path");
-        String[] split = Iterables.toArray(Splitter.on(':').omitEmptyStrings().split(path), String.class);
-        File dest = root;
-        Iterable<String> subSplit = Splitter.on('.').omitEmptyStrings().split(split[0]);
-        for(String part : subSplit)
-        {
-            dest = new File(dest, part);
-        }
-        dest = new File(new File(dest, split[1]), split[2]);
-        String fileName = split[1] + "-" + split[2] + ".jar";
-        return new File(dest, fileName);
-    }
+	public static boolean getStripMetaInf()
+	{
+		try
+		{
+			return INSTANCE.installerData.getBooleanValue("install", "stripMeta");
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
+	}
 
-    public static String getVersion()
-    {
-        return INSTANCE.installerData.getStringValue("install", "installerVersion");
-    }
-    
-    public static String getRemoteVersion()
-    {
-        String url = INSTANCE.installerData.getStringValue("install", "remoteVersionURL");
-        List<String> version = DownloadUtils.downloadList(url);
-        if(version.isEmpty())
-        {
-        	return "unknow";
-        }
-        else
-        {
-            return version.get(0);
-        }
-    }
+	public static File getMinecraftFile(File path)
+	{
+		return new File(new File(path, RemoteInfo.getMinecraftVersion()), RemoteInfo.getMinecraftVersion() + ".jar");
+	}
 
-    public static String getWelcomeMessage()
-    {
-        return INSTANCE.installerData.getStringValue("install", "welcome");
-    }
+	public static void extractFile(File path) throws IOException
+	{
+		INSTANCE.downloadForgeLib(path);
+	}
 
-    public static String getLogoFileName()
-    {
-        return INSTANCE.installerData.getStringValue("install", "logo");
-    }
+	private void downloadForgeLib(File path) throws IOException
+	{
+		URL url = new URL(RemoteInfo.getFileLink());
+		URLConnection urlconnection = url.openConnection();
 
-    public static boolean getStripMetaInf()
-    {
-        try
-        {
-            return INSTANCE.installerData.getBooleanValue("install", "stripMeta");
-        }
-        catch(Exception e)
-        {
-            return false;
-        }
-    }
+		if((urlconnection instanceof HttpURLConnection))
+		{
+			urlconnection.setRequestProperty("Cache-Control", "no-cache");
+			urlconnection.connect();
+		}
+		InputStream inputStream = urlconnection.getInputStream();
+		OutputSupplier<FileOutputStream> outputSupplier = Files.newOutputStreamSupplier(path);
+		ByteStreams.copy(inputStream, outputSupplier);
+	}
 
-    public static JsonNode getVersionInfo()
-    {
-        return INSTANCE.profileData.getNode("versionInfo");
-    }
+	public static String getMirrorListURL()
+	{
+		return INSTANCE.installerData.getStringValue("install", "mirrorList");
+	}
 
-    public static File getMinecraftFile(File path)
-    {
-        return new File(new File(path, getMinecraftVersion()), getMinecraftVersion() + ".jar");
-    }
+	public static boolean hasMirrors()
+	{
+		return INSTANCE.installerData.isStringValue("install", "mirrorList");
+	}
 
-    public static String getContainedFile()
-    {
-        return INSTANCE.installerData.getStringValue("install", "filePath");
-    }
-
-    public static void extractFile(File path) throws IOException
-    {
-        INSTANCE.doFileExtract(path);
-    }
-
-    private void doFileExtract(File path) throws IOException
-    {
-        InputStream inputStream = getClass().getResourceAsStream("/" + getContainedFile());
-        OutputSupplier<FileOutputStream> outputSupplier = Files.newOutputStreamSupplier(path);
-        ByteStreams.copy(inputStream, outputSupplier);
-    }
-
-    public static String getMinecraftVersion()
-    {
-        return INSTANCE.installerData.getStringValue("install", "minecraft");
-    }
-
-    public static String getMirrorListURL()
-    {
-        return INSTANCE.installerData.getStringValue("install", "mirrorList");
-    }
-
-    public static boolean hasMirrors()
-    {
-        return INSTANCE.installerData.isStringValue("install", "mirrorList");
-    }
-    
-    public static String getUpdaterURL()
-    {
-        return INSTANCE.installerData.getStringValue("install", "updaterURL");
-    }
-    
-    public static String getJVMArguments()
-    {
-        return INSTANCE.installerData.getStringValue("install", "JVMArguments");
-    }
-
-    public static boolean hasJVMArguments()
-    {
-        return INSTANCE.installerData.isStringValue("install", "JVMArguments");
-    }
-    
-    public static String getModsURL()
-    {
-        return INSTANCE.installerData.getStringValue("install", "modsURL");
-    }
-    
-    public static String getConfigsURL()
-    {
-        return INSTANCE.installerData.getStringValue("install", "configsURL");
-    }
-    
-    public static String getAdditionPackURL()
-    {
-        return INSTANCE.installerData.getStringValue("install", "additionPackURL");
-    }
-    
-    public static boolean hasAdditionPack()
-    {
-        return INSTANCE.installerData.isStringValue("install", "additionPackURL");
-    }
+	public static String getUpdaterURL()
+	{
+		return INSTANCE.installerData.getStringValue("install", "updaterURL");
+	}
+	
+	public static String getWinProfile()
+	{
+		return INSTANCE.installerData.getStringValue("install", "winProfile");
+	}
+	
+	public static String getUnixProfile()
+	{
+		return INSTANCE.installerData.getStringValue("install", "unixProfile");
+	}
+	
+	public static String getRemoteInstall()
+	{
+		return INSTANCE.installerData.getStringValue("install", "remoteInstall");
+	}
 }

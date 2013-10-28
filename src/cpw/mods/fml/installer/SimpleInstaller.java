@@ -41,15 +41,15 @@ public class SimpleInstaller
         {
             try
             {
-                VersionInfo.getVersionTarget();
+            	RemoteInfo.getVersionTarget();
                 if(!InstallerAction.EXTRACT.run(new File(".")))
                 {
-                    System.err.println("A problem occurred extracting the file to " + VersionInfo.getContainedFile());
+                    System.err.println("A problem occurred extracting the file to " + RemoteInfo.getContainedFile());
                     System.exit(1);
                 }
                 else
                 {
-                    System.out.println("File extracted successfully to " + VersionInfo.getContainedFile());
+                    System.out.println("File extracted successfully to " + RemoteInfo.getContainedFile());
                     System.out.println("You can delete this installer file now if you wish");
                 }
                 System.exit(0);
@@ -113,7 +113,7 @@ public class SimpleInstaller
 
         try
         {
-            VersionInfo.getVersionTarget();
+        	RemoteInfo.getVersionTarget();
         }
         catch(Throwable e)
         {

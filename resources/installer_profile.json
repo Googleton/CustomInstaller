@@ -1,18 +1,11 @@
 {
   "install": {
-    "profileName": "serverName",
-    "target":"serverName",
-    "path":"net.minecraftforge:minecraftforge:9.11.1.923",
-    "installerVersion":"serverName 1.0.0",
     "remoteVersionURL":"http://files.minecraftforgefrance.fr/installercustom/version.txt",
-    "filePath":"minecraftforge-universal-1.6.4-9.11.1.923.jar",
-    "welcome":"Welcome to the simple serverName installer.",
-    "minecraft":"1.6.4",
     "logo":"/big_logo.png",
+    "remoteInstall":"http://files.minecraftforgefrance.fr/installercustom/remoteInstaller_profile.json",
     "mirrorList":"http://files.minecraftforgefrance.fr/mirror-brand.list",
     "updaterURL":"http://files.minecraftforgefrance.fr/installercustom/Updater.jar",
-    "modsURL":"http://files.minecraftforgefrance.fr/installercustom/mods.zip.xz",
-    "configsURL":"http://files.minecraftforgefrance.fr/installercustom/config.zip.xz",
-    "JVMArguments":"-Xmx1536M -XX:PermSize=64M -XX:MaxPermSize=128M"
+    "winProfile":"http://files.minecraftforgefrance.fr/installercustom/launcher_profile_WIN.json",
+    "unixProfile":"http://files.minecraftforgefrance.fr/installercustom/launcher_profile_UNIX.json"
   }
 }

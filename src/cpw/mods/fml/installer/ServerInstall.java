@@ -38,18 +38,18 @@ public class ServerInstall implements ActionType
         {
             monitor.setNote(getSponsorMessage());
         }
-        List<JsonNode> libraries = VersionInfo.getVersionInfo().getArrayNode("libraries");
+        List<JsonNode> libraries = RemoteInfo.getVersionInfo().getArrayNode("libraries");
         monitor.setMaximum(libraries.size() + 2);
         int progress = 2;
         grabbed = Lists.newArrayList();
         List<String> bad = Lists.newArrayList();
-        String mcServerURL = String.format("https://s3.amazonaws.com/Minecraft.Download/versions/%s/minecraft_server.%s.jar", VersionInfo.getMinecraftVersion(), VersionInfo.getMinecraftVersion());
-        File mcServerFile = new File(target, "minecraft_server." + VersionInfo.getMinecraftVersion() + ".jar");
+        String mcServerURL = String.format("https://s3.amazonaws.com/Minecraft.Download/versions/%s/minecraft_server.%s.jar", RemoteInfo.getMinecraftVersion(), RemoteInfo.getMinecraftVersion());
+        File mcServerFile = new File(target, "minecraft_server." + RemoteInfo.getMinecraftVersion() + ".jar");
         if(!mcServerFile.exists())
         {
             monitor.setNote("Considering minecraft server jar");
             monitor.setProgress(1);
-            monitor.setNote(String.format("Downloading minecraft server version %s", VersionInfo.getMinecraftVersion()));
+            monitor.setNote(String.format("Downloading minecraft server version %s", RemoteInfo.getMinecraftVersion()));
             DownloadUtils.downloadFile("minecraft server", mcServerFile, mcServerURL, null);
             monitor.setProgress(2);
         }
@@ -67,7 +67,7 @@ public class ServerInstall implements ActionType
         }
         try
         {
-            File targetRun = new File(target, VersionInfo.getContainedFile());
+            File targetRun = new File(target, RemoteInfo.getContainedFile());
             VersionInfo.extractFile(targetRun);
         }
         catch(IOException e)
@@ -108,7 +108,7 @@ public class ServerInstall implements ActionType
     @Override
     public String getSuccessMessage()
     {
-        return String.format("Successfully downloaded minecraft server, downloaded %d libraries and installed %s", grabbed.size(), VersionInfo.getProfileName());
+        return String.format("Successfully downloaded minecraft server, downloaded %d libraries and installed %s", grabbed.size(), RemoteInfo.getProfileName());
     }
 
     @Override
