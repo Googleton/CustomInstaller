@@ -48,7 +48,7 @@ public class ClientUpdaterMod
 		{
 			try
 			{
-				Runtime.getRuntime().exec("java -jar " + new File(Minecraft.getMinecraft().mcDataDir, "Installer.jar").getAbsolutePath());
+				Runtime.getRuntime().exec("java -jar " + new File(Minecraft.getMinecraft().mcDataDir, "Installer.jar --update").getAbsolutePath());
 				System.exit(0);
 			}
 			catch(IOException e)

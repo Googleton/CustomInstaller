@@ -42,9 +42,8 @@ import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 
-public class DownloadUtils
+public class DownloadAndFileUtils
 {
-
     private static final String PACK_NAME = ".pack.xz";
 
     public static int downloadInstalledLibraries(String jsonMarker, File librariesDir, IMonitor monitor, List<JsonNode> libraries, int progress, List<String> grabbed, List<String> bad)
@@ -161,7 +160,7 @@ public class DownloadUtils
             output.delete();
         }
 
-        byte[] decompressed = DownloadUtils.readFully(new XZInputStream(new ByteArrayInputStream(data)));
+        byte[] decompressed = DownloadAndFileUtils.readFully(new XZInputStream(new ByteArrayInputStream(data)));
 
         // Snag the checksum signature
         String end = new String(decompressed, decompressed.length - 4, 4);
@@ -717,6 +716,28 @@ public class DownloadUtils
         {
             JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+        }
+    }
+    
+    public static void recursifDelete(File path) throws IOException
+    {
+        if(!path.exists())
+        {
+            throw new IOException("File not found '" + path.getAbsolutePath() + "'");
+        }
+        if(path.isDirectory())
+        {
+            File[] children = path.listFiles();
+            for(int i = 0; children != null && i < children.length; i++)
+                recursifDelete(children[i]);
+            if(!path.delete())
+            {
+                throw new IOException("No delete path '" + path.getAbsolutePath() + "'");
+            }
+        }
+        else if(!path.delete())
+        {
+            throw new IOException("No delete file '" + path.getAbsolutePath() + "'");
         }
     }
 }

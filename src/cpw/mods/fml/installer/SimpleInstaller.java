@@ -21,7 +21,7 @@ public class SimpleInstaller
     public static void main(String[] args) throws IOException
     {
         OptionParser parser = new OptionParser();
-        OptionSpecBuilder update = parser.accepts("update", "Install a server to the current directory");
+        OptionSpecBuilder update = parser.accepts("update", "Run a update");
         OptionSpecBuilder helpOption = parser.acceptsAll(Arrays.asList("h", "help"), "Help with this installer");
         OptionSet optionSet = parser.parse(args);
         if(optionSet.specs().size() > 0)
@@ -30,7 +30,7 @@ public class SimpleInstaller
         }
         else
         {
-            launchGui();
+            launchGui(false);
         }
     }
 
@@ -40,8 +40,7 @@ public class SimpleInstaller
         {
             try
             {
-            	RemoteInfo.getVersionTarget();
-                System.exit(0);
+                launchGui(true);
             }
             catch(Throwable e)
             {
@@ -78,7 +77,7 @@ public class SimpleInstaller
         WINDOWS, MACOS, UNIX, UNKNOWN;
     }
 
-    private static void launchGui()
+    private static void launchGui(boolean updateMode)
     {
         String userHomeDir = System.getProperty("user.home", ".");
         File targetDir = null;
@@ -118,7 +117,7 @@ public class SimpleInstaller
         catch(Exception e)
         {}
 
-        InstallerPanel panel = new InstallerPanel(targetDir);
-        panel.run();
+        InstallerPanel panel = new InstallerPanel(targetDir, updateMode);
+        panel.run(updateMode);
     }
 }

@@ -59,7 +59,7 @@ public class VersionInfo
 	public static String getRemoteVersion()
 	{
 		String url = INSTANCE.installerData.getStringValue("install", "remoteVersionURL");
-		List<String> version = DownloadUtils.downloadList(url);
+		List<String> version = DownloadAndFileUtils.downloadList(url);
 		if(version.isEmpty())
 		{
 			return "unknow";

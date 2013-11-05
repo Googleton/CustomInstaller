@@ -133,7 +133,7 @@ public class LibraryPacker
         {
             if(!entry.isDirectory())
             {
-                checksums.append(Hashing.sha1().hashBytes(DownloadUtils.readFully(in)).toString()).append(' ').append(entry.getName()).append('\n');
+                checksums.append(Hashing.sha1().hashBytes(DownloadAndFileUtils.readFully(in)).toString()).append(' ').append(entry.getName()).append('\n');
             }
             entry = in.getNextJarEntry();
         }
@@ -238,9 +238,9 @@ public class LibraryPacker
 
         File output = new File(path.getAbsolutePath() + ".unpacked.test");
 
-        DownloadUtils.unpackLibrary(new File(path.getAbsolutePath() + ".unpacked.test"), data);
+        DownloadAndFileUtils.unpackLibrary(new File(path.getAbsolutePath() + ".unpacked.test"), data);
 
-        DownloadUtils.validateJar(output, Files.toByteArray(output), CHECKSUMS);
+        DownloadAndFileUtils.validateJar(output, Files.toByteArray(output), CHECKSUMS);
 
         t.stop();
         System.out.println("  Decompress: " + t.toString());

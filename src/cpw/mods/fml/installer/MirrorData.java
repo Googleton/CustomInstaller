@@ -78,7 +78,7 @@ public enum MirrorData
     {
         String url = VersionInfo.getMirrorListURL();
         List<Mirror> results = Lists.newArrayList();
-        List<String> mirrorList = DownloadUtils.downloadList(url);
+        List<String> mirrorList = DownloadAndFileUtils.downloadList(url);
         Splitter splitter = Splitter.on('!').trimResults();
         for(String mirror : mirrorList)
         {

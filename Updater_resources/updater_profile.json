@@ -1,8 +1,0 @@
-{
-  "install": {
-    "packName": "serverName",
-    "remoteVersionURL":"http://files.minecraftforgefrance.fr/installercustom/version.txt",
-    "modsURL":"http://files.minecraftforgefrance.fr/installercustom/mods.zip.xz",
-    "configsURL":"http://files.minecraftforgefrance.fr/installercustom/config.zip.xz"
-  }
-}

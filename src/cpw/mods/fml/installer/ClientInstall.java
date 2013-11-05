@@ -89,13 +89,13 @@ public class ClientInstall implements ActionType
         }
         File librariesDir = new File(target, "libraries");
         File targetLibraryFile = VersionInfo.getLibraryPath(librariesDir);
-        IMonitor monitor = DownloadUtils.buildMonitor();
+        IMonitor monitor = DownloadAndFileUtils.buildMonitor();
         List<JsonNode> libraries = RemoteInfo.getVersionInfo().getArrayNode("libraries");
         monitor.setMaximum(libraries.size() + 2);
         int progress = 2;
         grabbed = Lists.newArrayList();
         List<String> bad = Lists.newArrayList();
-        progress = DownloadUtils.downloadInstalledLibraries("clientreq", librariesDir, monitor, libraries, progress, grabbed, bad);
+        progress = DownloadAndFileUtils.downloadInstalledLibraries("clientreq", librariesDir, monitor, libraries, progress, grabbed, bad);
 
         monitor.close();
         if(bad.size() > 0)
@@ -192,6 +192,9 @@ public class ClientInstall implements ActionType
         // make modpacks folder
         File modPacksFolder = new File(target, "modpacks");
         File thisPackFolder = new File(modPacksFolder, RemoteInfo.getProfileName());
+        File modsFolder = new File(thisPackFolder, "mods");
+        File configFolder = new File(thisPackFolder, "config");
+        
         if(!modPacksFolder.exists())
         {
             modPacksFolder.mkdir();
@@ -199,6 +202,26 @@ public class ClientInstall implements ActionType
         if(!thisPackFolder.exists())
         {
             thisPackFolder.mkdir();
+        }
+        
+        if(modsFolder.exists())
+        {
+            try
+            {
+                DownloadAndFileUtils.recursifDelete(modsFolder);
+            }
+            catch(Exception ex)
+            {}
+        }
+
+        if(configFolder.exists())
+        {
+            try
+            {
+                DownloadAndFileUtils.recursifDelete(configFolder);
+            }
+            catch(Exception ex)
+            {}
         }
 
         // download mod
@@ -211,7 +234,7 @@ public class ClientInstall implements ActionType
         }
         try
         {
-            DownloadUtils.downloadAndExtractMod(downloadLink, thisPackFolder, VersionInfo.getUpdaterURL());
+            DownloadAndFileUtils.downloadAndExtractMod(downloadLink, thisPackFolder, VersionInfo.getUpdaterURL());
         }
         catch(Exception e)
         {

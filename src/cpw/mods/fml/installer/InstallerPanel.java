@@ -65,7 +65,7 @@ public class InstallerPanel extends JPanel
         }
     }
 
-    public InstallerPanel(File targetDir)
+    public InstallerPanel(File targetDir, boolean updateMode)
     {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         BufferedImage image;
@@ -86,7 +86,8 @@ public class InstallerPanel extends JPanel
         logoLabel.setAlignmentY(CENTER_ALIGNMENT);
         logoLabel.setSize(image.getWidth(), image.getHeight());
         logoSplash.add(logoLabel);
-        JLabel tag = new JLabel(RemoteInfo.getWelcomeMessage());
+        String welcome = updateMode ? "Update avaible :" : RemoteInfo.getWelcomeMessage();
+        JLabel tag = new JLabel(welcome);
         tag.setAlignmentX(CENTER_ALIGNMENT);
         tag.setAlignmentY(CENTER_ALIGNMENT);
         logoSplash.add(tag);
@@ -159,7 +160,6 @@ public class InstallerPanel extends JPanel
         selectedDirText.setEditable(false);
         selectedDirText.setToolTipText("Path to minecraft");
         selectedDirText.setColumns(30);
-        // homeDir.setMaximumSize(homeDir.getPreferredSize());
         entryPanel.add(selectedDirText);
         JButton dirSelect = new JButton();
         dirSelect.setAction(new FileSelectAction());
@@ -243,20 +243,22 @@ public class InstallerPanel extends JPanel
         }
     }
 
-    public void run()
+    public void run(boolean updateMode)
     {
-        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new String[] {"Install", "Cancel"}, "defaut");
+        String buttonName = updateMode ? "Update" : "Install";
+        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new String[] {buttonName, "Cancel"}, "defaut");
 
         Frame emptyFrame = new Frame("Mod system installer");
         emptyFrame.setUndecorated(true);
         emptyFrame.setVisible(true);
         emptyFrame.setLocationRelativeTo(null);
-        dialog = optionPane.createDialog(emptyFrame, "Mod system installer");
+        String frameName = updateMode ? "Mod System updater" : "Mod system installer";
+        dialog = optionPane.createDialog(emptyFrame, frameName);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
 
         String result = (String)(optionPane.getValue() != null ? optionPane.getValue() : "error");
-        if(result.equals("Install"))
+        if(result.equals("Install") || result.equals("Update"))
         {
             InstallerAction action = InstallerAction.CLIENT;
             if(action.run(targetDir))
