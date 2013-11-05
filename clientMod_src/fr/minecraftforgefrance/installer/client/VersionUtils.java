@@ -78,6 +78,7 @@ public class VersionUtils
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
+			ClientUpdaterMod.logger.severe("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}

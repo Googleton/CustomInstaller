@@ -23,7 +23,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -33,7 +32,6 @@ public class InstallerPanel extends JPanel
 {
     private static final long serialVersionUID = 1L;
     private File targetDir;
-    private ButtonGroup choiceButtonGroup;
     private JTextField selectedDirText;
     private JLabel infoLabel;
     private JButton sponsorButton;
@@ -65,18 +63,6 @@ public class InstallerPanel extends JPanel
                 break;
             }
         }
-    }
-
-    private class SelectButtonAction extends AbstractAction
-    {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            updateFilePath();
-        }
-
     }
 
     public InstallerPanel(File targetDir)
@@ -157,26 +143,10 @@ public class InstallerPanel extends JPanel
 
         this.add(sponsorPanel);
 
-        choiceButtonGroup = new ButtonGroup();
+        new ButtonGroup();
 
         JPanel choicePanel = new JPanel();
         choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.Y_AXIS));
-        boolean first = true;
-        SelectButtonAction sba = new SelectButtonAction();
-        for(InstallerAction action : InstallerAction.values())
-        {
-            JRadioButton radioButton = new JRadioButton();
-            radioButton.setAction(sba);
-            radioButton.setText(action.getButtonLabel());
-            radioButton.setActionCommand(action.name());
-            radioButton.setToolTipText(action.getTooltip());
-            radioButton.setSelected(first);
-            radioButton.setAlignmentX(LEFT_ALIGNMENT);
-            radioButton.setAlignmentY(CENTER_ALIGNMENT);
-            choiceButtonGroup.add(radioButton);
-            choicePanel.add(radioButton);
-            first = false;
-        }
 
         choicePanel.setAlignmentX(RIGHT_ALIGNMENT);
         choicePanel.setAlignmentY(CENTER_ALIGNMENT);
@@ -199,6 +169,7 @@ public class InstallerPanel extends JPanel
 
         entryPanel.setAlignmentX(LEFT_ALIGNMENT);
         entryPanel.setAlignmentY(TOP_ALIGNMENT);
+
         infoLabel = new JLabel();
         infoLabel.setHorizontalTextPosition(JLabel.LEFT);
         infoLabel.setVerticalTextPosition(JLabel.TOP);
@@ -230,7 +201,7 @@ public class InstallerPanel extends JPanel
 
         }
 
-        InstallerAction action = InstallerAction.valueOf(choiceButtonGroup.getSelection().getActionCommand());
+        InstallerAction action = InstallerAction.CLIENT;
         boolean valid = action.isPathValid(targetDir);
 
         String sponsorMessage = action.getSponsorMessage();
@@ -274,7 +245,7 @@ public class InstallerPanel extends JPanel
 
     public void run()
     {
-        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new String[] {"Install", "Cancel"}, "defaut");
 
         Frame emptyFrame = new Frame("Mod system installer");
         emptyFrame.setUndecorated(true);
@@ -283,10 +254,11 @@ public class InstallerPanel extends JPanel
         dialog = optionPane.createDialog(emptyFrame, "Mod system installer");
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
-        int result = (Integer)(optionPane.getValue() != null ? optionPane.getValue() : -1);
-        if(result == JOptionPane.OK_OPTION)
+
+        String result = (String)(optionPane.getValue() != null ? optionPane.getValue() : "error");
+        if(result.equals("Install"))
         {
-            InstallerAction action = InstallerAction.valueOf(choiceButtonGroup.getSelection().getActionCommand());
+            InstallerAction action = InstallerAction.CLIENT;
             if(action.run(targetDir))
             {
                 JOptionPane.showMessageDialog(null, action.getSuccessMessage(), "Complete", JOptionPane.INFORMATION_MESSAGE);

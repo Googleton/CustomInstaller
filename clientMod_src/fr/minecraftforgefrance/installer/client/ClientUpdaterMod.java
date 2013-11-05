@@ -1,6 +1,7 @@
 package fr.minecraftforgefrance.installer.client;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -45,25 +46,15 @@ public class ClientUpdaterMod
 
 		if(!VersionUtils.isUpdated())
 		{
-			this.startUpdater(new File(Minecraft.getMinecraft().mcDataDir, "Updater.jar"));
-		}
-	}
-
-	@SuppressWarnings("resource")
-	public void startUpdater(final File updaterJar)
-	{
-		logger.info("Starting launcher.");
-		try
-		{
-			final Class aClass = new URLClassLoader(new URL[] {updaterJar.toURI().toURL()}).loadClass("fr.minecraftforgefrance.updater.Updater");
-			final Constructor constructor = aClass.getConstructor(new Class[] {File.class});
-			constructor.newInstance(new Object[] {Minecraft.getMinecraft().mcDataDir});
-			System.exit(0);
-		}
-		catch(final Exception e)
-		{
-			e.printStackTrace();
-			logger.severe("Coundn't run updater");
+			try
+			{
+				Runtime.getRuntime().exec("java -jar " + new File(Minecraft.getMinecraft().mcDataDir, "Installer.jar").getAbsolutePath());
+				System.exit(0);
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 }

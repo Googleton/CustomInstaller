@@ -21,13 +21,12 @@ public class SimpleInstaller
     public static void main(String[] args) throws IOException
     {
         OptionParser parser = new OptionParser();
-        OptionSpecBuilder serverInstallOption = parser.accepts("installServer", "Install a server to the current directory");
-        OptionSpecBuilder extractOption = parser.accepts("extract", "Extract the contained jar file");
+        OptionSpecBuilder update = parser.accepts("update", "Install a server to the current directory");
         OptionSpecBuilder helpOption = parser.acceptsAll(Arrays.asList("h", "help"), "Help with this installer");
         OptionSet optionSet = parser.parse(args);
         if(optionSet.specs().size() > 0)
         {
-            handleOptions(parser, optionSet, serverInstallOption, extractOption, helpOption);
+            handleOptions(parser, optionSet, update, helpOption);
         }
         else
         {
@@ -35,23 +34,13 @@ public class SimpleInstaller
         }
     }
 
-    private static void handleOptions(OptionParser parser, OptionSet optionSet, OptionSpecBuilder serverInstallOption, OptionSpecBuilder extractOption, OptionSpecBuilder helpOption) throws IOException
+    private static void handleOptions(OptionParser parser, OptionSet optionSet, OptionSpecBuilder update, OptionSpecBuilder helpOption) throws IOException
     {
-        if(optionSet.has(extractOption))
+        if(optionSet.has(update))
         {
             try
             {
             	RemoteInfo.getVersionTarget();
-                if(!InstallerAction.EXTRACT.run(new File(".")))
-                {
-                    System.err.println("A problem occurred extracting the file to " + RemoteInfo.getContainedFile());
-                    System.exit(1);
-                }
-                else
-                {
-                    System.out.println("File extracted successfully to " + RemoteInfo.getContainedFile());
-                    System.out.println("You can delete this installer file now if you wish");
-                }
                 System.exit(0);
             }
             catch(Throwable e)
@@ -132,5 +121,4 @@ public class SimpleInstaller
         InstallerPanel panel = new InstallerPanel(targetDir);
         panel.run();
     }
-
 }
