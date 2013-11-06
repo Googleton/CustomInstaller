@@ -37,9 +37,9 @@ public enum InstallerAction
         return tooltip;
     }
 
-    public boolean run(File path)
+    public boolean run(File path, boolean updateMode)
     {
-        return action.run(path);
+        return action.run(path, updateMode);
     }
 
     public boolean isPathValid(File targetDir)

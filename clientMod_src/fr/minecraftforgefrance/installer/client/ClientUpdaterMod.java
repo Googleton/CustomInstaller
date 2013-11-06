@@ -13,11 +13,11 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "ClientUpdater", name = "Client Updater", version = "1.0.0")
+@Mod(modid = "ClientUpdater", name = "Client Updater", version = "@VERSION@")
 public class ClientUpdaterMod
 {
 	public static Logger logger;
-	public static String versionFileURL;
+	public static String versionFileURL, installerName;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -32,7 +32,8 @@ public class ClientUpdaterMod
 		try
 		{
 			cfg.load();
-			versionFileURL = cfg.get(cfg.CATEGORY_GENERAL, "Version File URL", "change me").getString();
+			versionFileURL = cfg.get(cfg.CATEGORY_GENERAL, "Version File URL", "http://files.minecraftforgefrance.fr/installercustom/version.txt").getString();
+			installerName = cfg.get(cfg.CATEGORY_GENERAL, "Installer Name", "Installer").getString();
 		}
 		catch(Exception ex)
 		{
@@ -43,12 +44,21 @@ public class ClientUpdaterMod
 			if(cfg.hasChanged())
 				cfg.save();
 		}
+		
+		File updater = new File(Minecraft.getMinecraft().mcDataDir, installerName + ".jar");
+		File newUpdater = new File(Minecraft.getMinecraft().mcDataDir, installerName + "new.jar");
+		
+		if(newUpdater.exists())
+		{
+			updater.delete();
+			newUpdater.renameTo(updater);
+		}
 
 		if(!VersionUtils.isUpdated())
 		{
 			try
 			{
-				Runtime.getRuntime().exec("java -jar " + new File(Minecraft.getMinecraft().mcDataDir, "Installer.jar --update").getAbsolutePath());
+				Runtime.getRuntime().exec("java -jar " + updater.getAbsolutePath() + " --update");
 				System.exit(0);
 			}
 			catch(IOException e)

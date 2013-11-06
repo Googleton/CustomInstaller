@@ -121,11 +121,6 @@ public class VersionInfo
 	{
 		return INSTANCE.installerData.isStringValue("install", "mirrorList");
 	}
-
-	public static String getUpdaterURL()
-	{
-		return INSTANCE.installerData.getStringValue("install", "updaterURL");
-	}
 	
 	public static String getWinProfile()
 	{

@@ -4,7 +4,6 @@
     "logo":"/big_logo.png",
     "remoteInstall":"http://files.minecraftforgefrance.fr/installercustom/remoteInstaller_profile.json",
     "mirrorList":"http://files.minecraftforgefrance.fr/mirror-brand.list",
-    "updaterURL":"http://files.minecraftforgefrance.fr/installercustom/Installer.jar",
     "winProfile":"http://files.minecraftforgefrance.fr/installercustom/launcher_profile_WIN.json",
     "unixProfile":"http://files.minecraftforgefrance.fr/installercustom/launcher_profile_UNIX.json"
   }

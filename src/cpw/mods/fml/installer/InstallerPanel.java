@@ -261,7 +261,7 @@ public class InstallerPanel extends JPanel
         if(result.equals("Install") || result.equals("Update"))
         {
             InstallerAction action = InstallerAction.CLIENT;
-            if(action.run(targetDir))
+            if(action.run(targetDir, updateMode))
             {
                 JOptionPane.showMessageDialog(null, action.getSuccessMessage(), "Complete", JOptionPane.INFORMATION_MESSAGE);
             }

@@ -39,7 +39,7 @@ public class ClientInstall implements ActionType
     private List<String> grabbed;
 
     @Override
-    public boolean run(File target)
+    public boolean run(File target, boolean updateMode)
     {
         if(!target.exists())
         {
@@ -60,7 +60,6 @@ public class ClientInstall implements ActionType
             if(!versionTarget.delete())
             {
                 JOptionPane.showMessageDialog(null, "There was a problem with the launcher version data. You will need to clear " + versionTarget.getAbsolutePath() + " manually", "Error", JOptionPane.ERROR_MESSAGE);
-
             }
             else
             {
@@ -159,34 +158,37 @@ public class ClientInstall implements ActionType
             throw Throwables.propagate(e);
         }
 
-        JsonField[] fields;
-        if(RemoteInfo.hasJVMArguments())
+        if(!updateMode)
         {
-            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget())), JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(RemoteInfo.getJVMArguments()))};
-        }
-        else
-        {
-            fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget()))};
-        }
-        HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
-        HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
-        profileCopy.put(JsonNodeFactories.string(RemoteInfo.getProfileName()), JsonNodeFactories.object(fields));
-        JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
+            JsonField[] fields;
+            if(RemoteInfo.hasJVMArguments())
+            {
+                fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget())), JsonNodeFactories.field("javaArgs", JsonNodeFactories.string(RemoteInfo.getJVMArguments()))};
+            }
+            else
+            {
+                fields = new JsonField[] {JsonNodeFactories.field("name", JsonNodeFactories.string(RemoteInfo.getProfileName())), JsonNodeFactories.field("lastVersionId", JsonNodeFactories.string(RemoteInfo.getVersionTarget()))};
+            }
+            HashMap<JsonStringNode, JsonNode> profileCopy = Maps.newHashMap(jsonProfileData.getNode("profiles").getFields());
+            HashMap<JsonStringNode, JsonNode> rootCopy = Maps.newHashMap(jsonProfileData.getFields());
+            profileCopy.put(JsonNodeFactories.string(RemoteInfo.getProfileName()), JsonNodeFactories.object(fields));
+            JsonRootNode profileJsonCopy = JsonNodeFactories.object(profileCopy);
 
-        rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);
+            rootCopy.put(JsonNodeFactories.string("profiles"), profileJsonCopy);
 
-        jsonProfileData = JsonNodeFactories.object(rootCopy);
+            jsonProfileData = JsonNodeFactories.object(rootCopy);
 
-        try
-        {
-            BufferedWriter newWriter = Files.newWriter(launcherProfiles, Charsets.UTF_8);
-            PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(jsonProfileData, newWriter);
-            newWriter.close();
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+            try
+            {
+                BufferedWriter newWriter = Files.newWriter(launcherProfiles, Charsets.UTF_8);
+                PrettyJsonFormatter.fieldOrderPreservingPrettyJsonFormatter().format(jsonProfileData, newWriter);
+                newWriter.close();
+            }
+            catch(Exception e)
+            {
+                JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
         // make modpacks folder
@@ -194,7 +196,7 @@ public class ClientInstall implements ActionType
         File thisPackFolder = new File(modPacksFolder, RemoteInfo.getProfileName());
         File modsFolder = new File(thisPackFolder, "mods");
         File configFolder = new File(thisPackFolder, "config");
-        
+
         if(!modPacksFolder.exists())
         {
             modPacksFolder.mkdir();
@@ -203,7 +205,7 @@ public class ClientInstall implements ActionType
         {
             thisPackFolder.mkdir();
         }
-        
+
         if(modsFolder.exists())
         {
             try
@@ -234,24 +236,24 @@ public class ClientInstall implements ActionType
         }
         try
         {
-            DownloadAndFileUtils.downloadAndExtractMod(downloadLink, thisPackFolder, VersionInfo.getUpdaterURL());
+            DownloadAndFileUtils.downloadAndExtractMod(downloadLink, thisPackFolder, RemoteInfo.getUpdaterURL(), updateMode);
         }
         catch(Exception e)
         {
             return false;
         }
-        
+
         if(VersionInfo.getRemoteVersion().equals("unknow"))
         {
-        	JOptionPane.showMessageDialog(null, "Couldn't get remote version, check your network", "Error", JOptionPane.ERROR_MESSAGE);
-        	return false;
+            JOptionPane.showMessageDialog(null, "Couldn't get remote version, check your network", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        
+
         try
         {
-        	BufferedWriter bw = new BufferedWriter(new FileWriter(new File(thisPackFolder, "version.txt")));
-        	bw.write(VersionInfo.getRemoteVersion());
-        	bw.close();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(thisPackFolder, "version.txt")));
+            bw.write(VersionInfo.getRemoteVersion());
+            bw.close();
         }
         catch(IOException e)
         {

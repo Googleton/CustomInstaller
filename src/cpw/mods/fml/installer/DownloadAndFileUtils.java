@@ -383,7 +383,7 @@ public class DownloadAndFileUtils
         };
     }
 
-    public static void downloadAndExtractMod(List<String> host, File dest, String updaterURL)
+    public static void downloadAndExtractMod(List<String> host, File dest, String updaterURL, boolean updateInstaller)
     {
         IMonitor monitor = new IMonitor()
         {
@@ -425,52 +425,7 @@ public class DownloadAndFileUtils
         {
             downloadMods(monitor, downloadLink, dest);
         }
-        downloadUpdater(monitor, updaterURL, dest);
-        monitor.close();
-    }
-
-    public static void downloadAndExtractMod(List<String> host, File dest)
-    {
-        IMonitor monitor = new IMonitor()
-        {
-            private ProgressMonitor monitor;
-            {
-                monitor = new ProgressMonitor(null, "Download and extract mods and configs             ", "   ", 0, 1);
-                monitor.setMillisToPopup(0);
-                monitor.setMillisToDecideToPopup(0);
-                monitor.setProgress(0);
-            }
-
-            @Override
-            public void setMaximum(int max)
-            {
-                monitor.setMaximum(max);
-            }
-
-            @Override
-            public void setNote(String note)
-            {
-                System.out.println(note);
-                monitor.setNote(note);
-            }
-
-            @Override
-            public void setProgress(int progress)
-            {
-                monitor.setProgress(progress);
-            }
-
-            @Override
-            public void close()
-            {
-                monitor.close();
-            }
-        };
-
-        for(String downloadLink : host)
-        {
-            downloadMods(monitor, downloadLink, dest);
-        }
+        downloadOrUpdateInstaller(monitor, updaterURL, dest, updateInstaller);
         monitor.close();
     }
 
@@ -649,7 +604,7 @@ public class DownloadAndFileUtils
         }
     }
 
-    public static void downloadUpdater(IMonitor monitor, String host, File dest)
+    public static void downloadOrUpdateInstaller(IMonitor monitor, String host, File dest, boolean update)
     {
         String fileName = "unknow";
         byte[] buffer = new byte[65536];
@@ -675,6 +630,10 @@ public class DownloadAndFileUtils
 
             fileName = url.getFile().substring(url.getFile().lastIndexOf('/') + 1);
             InputStream inputstream = urlconnection.getInputStream();
+            if(update)
+            {
+                fileName = fileName.replace(".jar", "new.jar");
+            }
             FileOutputStream fos = new FileOutputStream(dest.toString() + File.separator + fileName);
 
             long downloadStartTime = System.currentTimeMillis();
@@ -718,7 +677,7 @@ public class DownloadAndFileUtils
             e.printStackTrace();
         }
     }
-    
+
     public static void recursifDelete(File path) throws IOException
     {
         if(!path.exists())

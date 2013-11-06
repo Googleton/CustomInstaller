@@ -4,7 +4,7 @@ import java.io.File;
 
 public interface ActionType
 {
-    boolean run(File target);
+    boolean run(File target, boolean updateMode);
 
     boolean isPathValid(File targetDir);
 
