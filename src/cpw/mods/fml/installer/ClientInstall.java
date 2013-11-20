@@ -43,13 +43,13 @@ public class ClientInstall implements ActionType
     {
         if(!target.exists())
         {
-            JOptionPane.showMessageDialog(null, "There is no minecraft installation at this location!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.noinstall"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         File launcherProfiles = new File(target, "launcher_profiles.json");
         if(!launcherProfiles.exists())
         {
-            JOptionPane.showMessageDialog(null, "There is no minecraft launcher profile at this location, you need to run the launcher first!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.noprofile"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -59,7 +59,7 @@ public class ClientInstall implements ActionType
         {
             if(!versionTarget.delete())
             {
-                JOptionPane.showMessageDialog(null, "There was a problem with the launcher version data. You will need to clear " + versionTarget.getAbsolutePath() + " manually", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "There was a problem with the launcher version data. You will need to clear " + versionTarget.getAbsolutePath() + " manually", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             }
             else
             {
@@ -83,7 +83,7 @@ public class ClientInstall implements ActionType
         }
         catch(IOException e1)
         {
-            JOptionPane.showMessageDialog(null, "You need to run the version " + RemoteInfo.getMinecraftVersion() + " manually at least once", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You need to run the version " + RemoteInfo.getMinecraftVersion() + " manually at least once", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         File librariesDir = new File(target, "libraries");
@@ -108,7 +108,7 @@ public class ClientInstall implements ActionType
         {
             if(!targetLibraryFile.getParentFile().delete())
             {
-                JOptionPane.showMessageDialog(null, "There was a problem with the launcher version data. You will need to clear " + targetLibraryFile.getAbsolutePath() + " manually", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "There was a problem with the launcher version data. You will need to clear " + targetLibraryFile.getAbsolutePath() + " manually", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             else
@@ -127,7 +127,7 @@ public class ClientInstall implements ActionType
         }
         catch(Exception e)
         {
-            JOptionPane.showMessageDialog(null, "There was a problem writing the launcher version data,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.write"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -137,7 +137,7 @@ public class ClientInstall implements ActionType
         }
         catch(IOException e)
         {
-            JOptionPane.showMessageDialog(null, "There was a problem writing the system library file", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "There was a problem writing the system library file", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -150,7 +150,7 @@ public class ClientInstall implements ActionType
         }
         catch(InvalidSyntaxException e)
         {
-            JOptionPane.showMessageDialog(null, "The launcher profile file is corrupted. Re-run the minecraft launcher to fix it!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.corrump"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
         catch(Exception e)
@@ -186,7 +186,7 @@ public class ClientInstall implements ActionType
             }
             catch(Exception e)
             {
-                JOptionPane.showMessageDialog(null, "There was a problem writing the launch profile,  is it write protected?", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.write"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -196,6 +196,7 @@ public class ClientInstall implements ActionType
         File thisPackFolder = new File(modPacksFolder, RemoteInfo.getProfileName());
         File modsFolder = new File(thisPackFolder, "mods");
         File configFolder = new File(thisPackFolder, "config");
+        File flanFolder = new File(thisPackFolder, "Flan");
 
         if(!modPacksFolder.exists())
         {
@@ -225,6 +226,16 @@ public class ClientInstall implements ActionType
             catch(Exception ex)
             {}
         }
+        
+        if(flanFolder.exists())
+        {
+            try
+            {
+                DownloadAndFileUtils.recursifDelete(flanFolder);
+            }
+            catch(Exception ex)
+            {}
+        }
 
         // download mod
         List<String> downloadLink = Lists.newArrayList();
@@ -245,7 +256,7 @@ public class ClientInstall implements ActionType
 
         if(VersionInfo.getRemoteVersion().equals("unknow"))
         {
-            JOptionPane.showMessageDialog(null, "Couldn't get remote version, check your network", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.connection"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -327,7 +338,7 @@ public class ClientInstall implements ActionType
     {
         if(targetDir.exists())
         {
-            return "The directory is missing a launcher profile. Please run the minecraft launcher first";
+            return Language.getLocalizedString("error.noprofile");
         }
         else
         {
@@ -338,7 +349,7 @@ public class ClientInstall implements ActionType
     @Override
     public String getSuccessMessage()
     {
-        return String.format("Successfully installed client profile %s for version %s into launcher and grabbed %d required libraries", RemoteInfo.getProfileName(), RemoteInfo.getNameAndVersion(), grabbed.size());
+        return String.format(Language.getLocalizedString("install.success"), RemoteInfo.getProfileName(), VersionInfo.getRemoteVersion(), grabbed.size());
     }
 
     @Override

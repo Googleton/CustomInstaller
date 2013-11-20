@@ -56,7 +56,7 @@ public class RemoteInfo
         catch(Exception ex)
         {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Couldn't get installer profile, check your network", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.connection"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
         }
 
         JdomParser parser = new JdomParser();

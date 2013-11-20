@@ -24,6 +24,7 @@ public class SimpleInstaller
         OptionSpecBuilder update = parser.accepts("update", "Run a update");
         OptionSpecBuilder helpOption = parser.acceptsAll(Arrays.asList("h", "help"), "Help with this installer");
         OptionSet optionSet = parser.parse(args);
+        
         if(optionSet.specs().size() > 0)
         {
             handleOptions(parser, optionSet, update, helpOption);
@@ -96,7 +97,7 @@ public class SimpleInstaller
         }
         else
         {
-            JOptionPane.showMessageDialog(null, "OS unrecognized, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "OS unrecognized, cannot install", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
         }
 
         try
@@ -106,7 +107,7 @@ public class SimpleInstaller
         catch(Throwable e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Corrupt download detected, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Corrupt download detected, cannot install", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 

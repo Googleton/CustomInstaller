@@ -448,7 +448,7 @@ public class DownloadAndFileUtils
 
             if(fileLength == -1)
             {
-                JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
             monitor.setMaximum(fileLength);
@@ -494,7 +494,7 @@ public class DownloadAndFileUtils
         }
         catch(IOException e)
         {
-            JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
@@ -599,7 +599,7 @@ public class DownloadAndFileUtils
         }
         catch(IOException e)
         {
-            JOptionPane.showMessageDialog(null, "Error while trying to extract " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error while trying to extract " + fileName, Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -623,7 +623,7 @@ public class DownloadAndFileUtils
 
             if(fileLength == -1)
             {
-                JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
             monitor.setMaximum(fileLength);
@@ -673,7 +673,7 @@ public class DownloadAndFileUtils
         }
         catch(IOException e)
         {
-            JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

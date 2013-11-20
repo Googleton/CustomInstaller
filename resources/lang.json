@@ -1,0 +1,34 @@
+{
+  "en": {
+    "install.success":"Successfully installed client profile %s for version %s into launcher and grabbed %d required libraries",
+    "frame.install":"Mod System Installer",
+    "frame.update":"Mod System Updater",
+    "button.install":"Install",
+    "button.update":"Update",
+    "button.cancel":"Cancel",
+    "error":"Error",
+    "complete":"Complete",
+    "error.noinstall":"There is no minecraft installation at this location!",
+    "error.noprofile":"There is no minecraft launcher profile at this location, you need to run the launcher first!",
+    "error.write":"There was a problem writing the launcher version data, is it write protected?",
+    "error.corrump":"The launcher profile file is corrupted. Re-run the minecraft launcher to fix it!",
+    "error.connection":"Couldn't get remote version, check your network",
+    "update.available":"Update available :"
+  },
+  "fr": {
+    "install.success":"Profile %s installé avec succès dans le launcher (version %s) et %d bibliothèques nécessaires ont été installées",
+    "frame.install":"Installateur de mods",
+    "frame.update":"Système de mise à jour",
+    "button.install":"Installer",
+    "button.update":"Mettre à jour",
+    "button.cancel":"Annuler",
+    "error":"Erreur",
+    "complete":"Terminé",
+    "error.noinstall":"Il n'y a pas d'installation de minecraft dans ce dossier !",
+    "error.noprofile":"Il n'y a pas de profile de minecraft dans ce dossier, vous devez lancer le launcher d'abord",
+    "error.write":"Un problème est survenu lors de l'écriture sur les données du launcher, sont-elles protégées ?",
+    "error.corrump":"Le fichier de profile du launcher est corrompu. Vous devez relancer le launcher pour corriger ce problème",
+    "error.connection":"Couldn't get remote version, check your network",
+    "update.available":"Mise à jour disponible :"
+  }
+}
