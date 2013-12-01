@@ -19,6 +19,7 @@ import com.google.common.io.InputSupplier;
 public class VersionUtils
 {
 	public static boolean hasCheckVersion;
+
 	public static List<String> readRemoteFile(String fileURL)
 	{
 		try
@@ -57,18 +58,18 @@ public class VersionUtils
 	{
 		String localVersion;
 		String remoteVersion;
-		
-		List<String> list = readRemoteFile(ClientUpdaterMod.versionFileURL);
+
+		List<String> list = readRemoteFile(ClientUpdaterModContainer.versionFileURL);
 		if(list.isEmpty())
 		{
-			ClientUpdaterMod.logger.severe("Couldn't get remote version, check your network");
+			ClientUpdaterModContainer.logger.severe("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}
-		
+
 		remoteVersion = list.get(0);
 		File localVersionFile = new File(Minecraft.getMinecraft().mcDataDir, "version.txt");
-		
+
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader(localVersionFile));
@@ -78,7 +79,7 @@ public class VersionUtils
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
-			ClientUpdaterMod.logger.severe("Couldn't get remote version, check your network");
+			ClientUpdaterModContainer.logger.severe("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}

@@ -52,7 +52,7 @@
 
     <!-- Replace version token -->
     <target name="replace_tokens">
-        <replace file="${mcp.dir}\src\minecraft\fr\minecraftforgefrance\installer\client\ClientUpdaterMod.java" token="@VERSION@" value="${buildprop.updateur_mod_version}" />
+        <replace file="${mcp.dir}\src\minecraft\fr\minecraftforgefrance\installer\client\ClientUpdaterModContainer.java" token="@VERSION@" value="${buildprop.updateur_mod_version}" />
     </target>
 
     <!-- Recompile -->
@@ -78,7 +78,7 @@
     <!-- Build the jar -->
     <target name="makejar">
         <mkdir dir="dist\" />
-        <jar destfile="dist\UpdaterMod-client-${buildprop.updateur_mod_version}-mc${buildprop.mc}.jar">
+        <jar destfile="dist\ClientUpdater-${buildprop.updateur_mod_version}-mc${buildprop.mc}.jar" manifest="clientMod_resources/MANIFEST.MF">
             <fileset dir="${mcp.dir}\reobf\minecraft" />
         </jar>
     </target>
