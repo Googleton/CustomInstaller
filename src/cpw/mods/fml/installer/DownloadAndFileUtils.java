@@ -62,7 +62,7 @@ public class DownloadAndFileUtils
                     }
                 }));
             }
-            monitor.setNote(String.format("Considering library %s", libName));
+            monitor.setNote(String.format(Language.getLocalizedString("lib.considering"), libName));
             if(library.isBooleanValue(jsonMarker) && library.getBooleanValue(jsonMarker))
             {
                 String[] nameparts = Iterables.toArray(Splitter.on(':').split(libName), String.class);
@@ -86,7 +86,7 @@ public class DownloadAndFileUtils
                 }
 
                 libPath.getParentFile().mkdirs();
-                monitor.setNote(String.format("Downloading library %s", libName));
+                monitor.setNote(String.format(Language.getLocalizedString("lib.downloading"), libName));
                 libURL += pathName;
                 File packFile = new File(libPath.getParentFile(), libPath.getName() + PACK_NAME);
                 if(!downloadFile(libName, packFile, libURL + PACK_NAME, null))
@@ -351,7 +351,7 @@ public class DownloadAndFileUtils
         {
             private ProgressMonitor monitor;
             {
-                monitor = new ProgressMonitor(null, "Downloading libraries", "Libraries are being analyzed", 0, 1);
+                monitor = new ProgressMonitor(null, Language.getLocalizedString("lib.downloading.monitor.name"), Language.getLocalizedString("lib.downloading.monitor.tip"), 0, 1);
                 monitor.setMillisToPopup(0);
                 monitor.setMillisToDecideToPopup(0);
             }
@@ -389,7 +389,7 @@ public class DownloadAndFileUtils
         {
             private ProgressMonitor monitor;
             {
-                monitor = new ProgressMonitor(null, "Download and extract mods and configs             ", "   ", 0, 1);
+                monitor = new ProgressMonitor(null, Language.getLocalizedString("download.extract.tip"), "   ", 0, 1);
                 monitor.setMillisToPopup(0);
                 monitor.setMillisToDecideToPopup(0);
                 monitor.setProgress(0);
@@ -448,7 +448,7 @@ public class DownloadAndFileUtils
 
             if(fileLength == -1)
             {
-                JOptionPane.showMessageDialog(null, "Invalide download link, cannot install", Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, Language.getLocalizedString("error.link.invalide"), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
                 return;
             }
             monitor.setMaximum(fileLength);
@@ -481,11 +481,11 @@ public class DownloadAndFileUtils
                     {
                         DecimalFormat df = new DecimalFormat();
                         df.setMaximumFractionDigits(2);
-                        monitor.setNote("Download " + fileName + " at " + String.valueOf(df.format(downloadSpeed / 1000)) + " mo/s");
+                        monitor.setNote(String.format(Language.getLocalizedString("download.mo"), fileName, String.valueOf(df.format(downloadSpeed / 1000))));
                     }
                     else
                     {
-                        monitor.setNote("Download " + fileName + " at " + String.valueOf(downloadSpeed) + " ko/s");
+                        monitor.setNote(String.format(Language.getLocalizedString("download.ko"), fileName, String.valueOf(downloadSpeed)));
                     }
                 }
             }
@@ -494,14 +494,14 @@ public class DownloadAndFileUtils
         }
         catch(IOException e)
         {
-            JOptionPane.showMessageDialog(null, "Error while trying to download " + fileName, Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, String.format(Language.getLocalizedString("download.error"), fileName), Language.getLocalizedString("error"), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
         // extract
         try
         {
-            monitor.setNote(String.format("Extract : %s", fileName));
+            monitor.setNote(String.format(Language.getLocalizedString("extract"), fileName));
             int totalSizeExtract = 0;
 
             File fileLocation = new File(dest, fileName);

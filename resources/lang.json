@@ -13,7 +13,17 @@
     "error.write":"There was a problem writing the launcher version data, is it write protected?",
     "error.corrump":"The launcher profile file is corrupted. Re-run the minecraft launcher to fix it!",
     "error.connection":"Couldn't get remote version, check your network",
-    "update.available":"Update available :"
+    "error.link.invalide":"Invalide download link, cannot install",
+    "update.available":"Update available :",
+    "download.mo":"Download %s at %s mo/s",
+    "download.ko":"Download %s at %s ko/s",
+    "download.error":"Error while trying to download %s",
+    "extract":"Extract : %s",
+    "download.extract.tip":"Download and extract mods and configs             ",
+    "lib.considering":"Considering library %s",
+    "lib.downloading":"Downloading library %s",
+    "lib.downloading.monitor.name":"Downloading library",
+    "lib.downloading.monitor.tip":"Libraries are being analyzed"
   },
   "fr": {
     "install.success":"Profile %s installé avec succès dans le launcher (version %s) et %d bibliothèques nécessaires ont été installées",
@@ -29,6 +39,16 @@
     "error.write":"Un problème est survenu lors de l'écriture sur les données du launcher, sont-elles protégées ?",
     "error.corrump":"Le fichier de profile du launcher est corrompu. Vous devez relancer le launcher pour corriger ce problème",
     "error.connection":"Couldn't get remote version, check your network",
-    "update.available":"Mise à jour disponible :"
+    "error.link.invalide":"Lien de téléchargement invalide, impossible d'installer",
+    "update.available":"Mise à jour disponible :",
+    "download.mo":"Téléchargement de %s à %s mo/s",
+    "download.ko":"Téléchargement de %s à %s ko/s",
+    "download.error":"Erreur lors du téléchargement de %s",
+    "extract":"Extraction de : %s",
+    "download.extract.tip":"Téléchargement et extraction des mods et des configurations      ",
+    "lib.considering":"Vérification de la bibliothèque %s",
+    "lib.downloading":"Téléchargement de la bibliothèque %s",
+    "lib.downloading.monitor.name":"Téléchargement des bibliothèques",
+    "lib.downloading.monitor.tip":"Les bibliothèques sont en cours d'analyse"
   }
 }
