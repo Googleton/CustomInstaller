@@ -70,7 +70,7 @@ public class DownloadAndFileUtils
                 String jarName = nameparts[1] + '-' + nameparts[2] + ".jar";
                 String pathName = nameparts[0] + '/' + nameparts[1] + '/' + nameparts[2] + '/' + jarName;
                 File libPath = new File(librariesDir, pathName.replace('/', File.separatorChar));
-                String libURL = "https://s3.amazonaws.com/Minecraft.Download/libraries/";
+                String libURL = "https://libraries.minecraft.net/";
                 if(MirrorData.INSTANCE.hasMirrors() && library.isStringValue("url"))
                 {
                     libURL = MirrorData.INSTANCE.getMirrorURL();
