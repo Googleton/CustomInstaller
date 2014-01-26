@@ -62,7 +62,7 @@ public class VersionUtils
 		List<String> list = readRemoteFile(ClientUpdaterModContainer.versionFileURL);
 		if(list.isEmpty())
 		{
-			ClientUpdaterModContainer.logger.severe("Couldn't get remote version, check your network");
+			System.out.println("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}
@@ -79,7 +79,7 @@ public class VersionUtils
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
-			ClientUpdaterModContainer.logger.severe("Couldn't get remote version, check your network");
+			System.out.println("Couldn't get remote version, check your network");
 			hasCheckVersion = false;
 			return true;
 		}

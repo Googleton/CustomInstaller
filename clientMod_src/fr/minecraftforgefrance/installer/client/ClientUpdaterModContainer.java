@@ -17,7 +17,6 @@ import cpw.mods.fml.common.ModMetadata;
 
 public class ClientUpdaterModContainer extends DummyModContainer
 {
-	public static Logger logger;
 	public static String versionFileURL, installerName;
 
 	public ClientUpdaterModContainer()
