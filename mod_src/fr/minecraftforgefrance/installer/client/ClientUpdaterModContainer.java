@@ -3,10 +3,9 @@ package fr.minecraftforgefrance.installer.client;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import com.google.common.eventbus.EventBus;
 
@@ -23,9 +22,9 @@ public class ClientUpdaterModContainer extends DummyModContainer
 	{
 		super(new ModMetadata());
 		ModMetadata meta = super.getMetadata();
-		meta.authorList = Arrays.asList(new String[] {"robin4002", "Woryk", "Shadt", "Arzchimonde"});
-		meta.modId = "ClientUpdater";
-		meta.version = "1.6.4";
+		meta.authorList = Arrays.asList(new String[] {"robin4002"});
+		meta.modId = "clientupdater";
+		meta.version = "1.7.2";
 		meta.name = "Client Updater";
 		meta.version = "@VERSION@";
 

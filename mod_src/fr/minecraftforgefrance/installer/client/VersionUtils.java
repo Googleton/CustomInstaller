@@ -18,8 +18,6 @@ import com.google.common.io.InputSupplier;
 
 public class VersionUtils
 {
-	public static boolean hasCheckVersion;
-
 	public static List<String> readRemoteFile(String fileURL)
 	{
 		try
@@ -34,6 +32,7 @@ public class VersionUtils
 		catch(Exception e)
 		{
 			e.printStackTrace();
+			System.out.println("Couldn't get remote version, check your network");
 			return Collections.emptyList();
 		}
 	}
@@ -62,8 +61,6 @@ public class VersionUtils
 		List<String> list = readRemoteFile(ClientUpdaterModContainer.versionFileURL);
 		if(list.isEmpty())
 		{
-			System.out.println("Couldn't get remote version, check your network");
-			hasCheckVersion = false;
 			return true;
 		}
 
@@ -79,8 +76,7 @@ public class VersionUtils
 		catch(IOException ex)
 		{
 			ex.printStackTrace();
-			System.out.println("Couldn't get remote version, check your network");
-			hasCheckVersion = false;
+			System.out.println("Couldn't get local version, please reinstall your pack");
 			return true;
 		}
 		return localVersion.equals(remoteVersion);

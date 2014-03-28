@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "2.1.0"
+group= "fr.minecraftforgefrance"
+archivesBaseName = "ClientUpdater"
+
+minecraft {
+    version = "1.7.2-10.12.0.1024"
+    assetDir = "run/assets"
+	
+    replace '@VERSION@', project.version
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'mod_src'
+        }
+    }
+}
+
+jar {
+    version = "${project.version}-mc${project.minecraft.version}"
+    manifest {
+        attributes("FMLCorePlugin": "fr.minecraftforgefrance.installer.client.ClientUpdaterPlugins", "FMLCorePluginContainsFMLMod": "true")
+    }
+}
